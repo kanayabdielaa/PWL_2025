@@ -19,6 +19,7 @@ class StokSeeder extends Seeder
                 'stok_jumlah' => rand(10, 100),
             ];
         }
+
         DB::table('t_stok')->insert($data);
     }
 }

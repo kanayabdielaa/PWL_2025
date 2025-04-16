@@ -33,6 +33,7 @@
                     </tr>
                 </table>
             @endempty
+
             <a href="{{ url('supplier') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
         </div>
     </div>

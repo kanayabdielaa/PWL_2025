@@ -12,7 +12,7 @@
                 @csrf
 
                 <div class="form-group row">
-                    <label for="supplier_kode" class="col-1 control-label col-form-label">Kode Supplier</label>
+                    <label for="supplier_kode" class="col-1 control-label col-form-label">Kode</label>
                     <div class="col-11">
                         <input type="text" class="form-control" name="supplier_kode" id="supplier_kode" value="{{ old('supplier_kode') }}">
                     </div>
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="supplier_nama" class="col-1 control-label col-form-label">Nama Supplier</label>
+                    <label for="supplier_nama" class="col-1 control-label col-form-label">Nama</label>
                     <div class="col-11">
                         <input type="text" class="form-control" id="supplier_nama" name="supplier_nama" value="{{ old('supplier_nama') }}" required>
 
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="supplier_alamat" class="col-1 control-label col-form-label">Alamat Supplier</label>
+                    <label for="supplier_alamat" class="col-1 control-label col-form-label">Alamat</label>
                     <div class="col-11">
                         <input type="text" class="form-control" id="supplier_alamat" name="supplier_alamat" value="{{ old('supplier_alamat') }}" required>
 

@@ -1,66 +1,52 @@
 @extends('layouts.template')
 
 @section('content')
-    <div class="card">
+    <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3 class="card-title">Daftar Level</h3>
+            <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-info">Import</button>
-                <a href="{{ url('/level/export_excel') }}" class="btn btn-primary">
-                    <i class="fa fa-file-excel"></i>
-                    Export Level (.xlsx)
-                </a>
-                <a href="{{ url('/level/export_pdf') }}" class="btn btn-warning">
-                    <i class="fa fa-file-excel"></i>
-                    Export Level (.pdf)
-                </a>
-                <button onclick="modalAction('{{ url('/level/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
-                    Ajax</button>
+                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-info">Import Level</button>
+                <a href="{{ url('/level/export_excel') }}" class="btn btn-primary"><i class="fa fa-file- excel"></i> Export Level</a>
+                <button onclick="modalAction('{{ url('/level/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
+                <a href="{{ url('/level/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file- pdf"></i> Export Level</a>
             </div>
         </div>
         <div class="card-body">
-            {{-- Filter --}}
-            <div id="filter" class="form-horizontal filter-date p-2 border-bottom mb-2">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group form-group-sm row text-sm mb-0">
-                            <label for="filter_date" class="col-md-1 col-form-label">Filter</label>
-                            <div class="col-md-3">
-                                <select name="filter_level" class="form-control form-control-sm filter_level">
-                                    <option value="">- Semua -</option>
-                                </select>
-                                <small class="form-text text-muted">Kategori Level</small>
-                            </div>
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-1 control-label col-form-label">Filter:</label>
+                        <div class="col-3">
+                            <select name="level_id" id="level_id" class="form-control" required>
+                                <option value="">- Semua -</option>
+                                @foreach ($level as $item)
+                                    <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted">Level Pengguna</small>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- Flash Message --}}
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
-
             <table class="table table-bordered table-striped table-hover table-sm" id="table_level">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Level Kode</th>
                         <th>Level Nama</th>
-                        <th>aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
             </table>
         </div>
     </div>
-
-    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static"
-        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -68,27 +54,26 @@
 
 @push('js')
     <script>
-        function modalAction(url = '') {
-            $('#myModal').load(url, function() {
-                $('#myModal').modal('show')
+        function modalAction(url = ''){
+            $('#myModal').load(url, function(){
+                $('#myModal').modal('show');
             });
         }
 
-        var dataLevel;
         $(document).ready(function() {
-            dataLevel = $('#table_level').DataTable({
-                processing: true,
+            var dataLevel = $('#table_level').DataTable({
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('level/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "data": function(d) {
-                        d.level_id = $('.filter_level').val();
+                        d.level_id = $('#level_id').val();
                     }
                 },
-                columns: [{
-                        data: "DT_RowIndex",
+                columns: [
+                    {
+                        data: "level_id",
                         className: "text-center",
                         orderable: false,
                         searchable: false
@@ -116,6 +101,6 @@
             $('#level_id').on('change', function() {
                 dataLevel.ajax.reload();
             });
-        })
+        });
     </script>
 @endpush

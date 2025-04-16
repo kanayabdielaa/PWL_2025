@@ -16,21 +16,21 @@ class SupplierSeeder extends Seeder
     {
         $data_supplier = [
             [
-                'supplier_kode' => 'SP01',
-                'supplier_nama' => 'PT Mega Hercules',
-                'supplier_alamat' => 'Jl. Gusti Ngurah Rai 158, Bali',
+                'supplier_kode' => 'SP001',
+                'supplier_nama' => 'PT Sumber Jaya Abadi',
+                'supplier_alamat' => 'Jl. Industri Raya No. 10, Jakarta Barat',
                 'created_at' => Carbon::now()
             ],
             [
-                'supplier_kode' => 'SP02',
-                'supplier_nama' => 'PT Florist Indah',
-                'supplier_alamat' => 'Jl. Galunggung 1B/185, Batu',
+                'supplier_kode' => 'SP002',
+                'supplier_nama' => 'PT Mitra Sejahtera',
+                'supplier_alamat' => 'Jl. Pahlawan No. 25, Surabaya',
                 'created_at' => Carbon::now()
             ],
             [
-                'supplier_kode' => 'SP03',
-                'supplier_nama' => 'PT Eksalunter',
-                'supplier_alamat' => 'Jl. Diponegoro No 100, Malang',
+                'supplier_kode' => 'SP003',
+                'supplier_nama' => 'PT Sentosa Makmur Bersama',
+                'supplier_alamat' => 'Jl. Gatot Subroto No. 15, Bandung',
                 'created_at' => Carbon::now()
             ],
         ];
