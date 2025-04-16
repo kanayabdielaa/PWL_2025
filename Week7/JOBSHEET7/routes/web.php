@@ -16,13 +16,15 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'postRegister']);
+
 
 // Semua rute di bawah ini hanya bisa diakses jika sudah login
 Route::middleware(['auth'])->group(function () {
-    //masukkan semua route yang perlu autentikasi di sini
     Route::get('/', [WelcomeController::class, 'index']);
 
-    Route::middleware(['authorize:ADM'])->group(function () {
+    Route::middleware(['authorize:ADM'])->group(function(){
         Route::group(['prefix' => 'user'], function () {
             Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
             Route::post('/list', [UserController::class, 'list']); // menampilkan data user dalam bentuk json untuk datatables
@@ -44,8 +46,8 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    //artinya semua route di dalam group ini harus punya role ADM (Administrator)
-    Route::middleware(['authorize:ADM'])->group(function () {
+    // artinya semua route di dalam group ini harus punya role ADM (Administrator)
+    Route::middleware(['authorize:ADM'])->group(function(){
         Route::group(['prefix' => 'level'], function () {
             Route::get('/', [LevelController::class, 'index']); // menampilkan halaman awal level
             Route::post("/list", [LevelController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
@@ -67,8 +69,8 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager)
-    Route::middleware(['authorize:ADM,MNG'])->group(function () {
+     // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager)
+     Route::middleware(['authorize:ADM,MNG'])->group(function(){
         Route::group(['prefix' => 'kategori'], function () {
             Route::get('/', [KategoriController::class, 'index']); // menampilkan halaman awal kategori
             Route::post("/list", [KategoriController::class, 'list']); // menampilkan data kategori dalam bentuk json untuk datatables
@@ -90,8 +92,9 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    
     // Staff hanya bisa melihat data barang
-    Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
+    Route::middleware(['authorize:ADM,MNG,STF'])->group(function(){
         Route::group(['prefix' => 'barang'], function () {
             Route::get('/', [BarangController::class, 'index']); // Menampilkan daftar barang
             Route::post('/list', [BarangController::class, 'list']); // Menampilkan data barang dalam bentuk JSON untuk datatables
@@ -100,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ADM & MNG bisa menambah, mengedit, dan menghapus barang
-    Route::middleware(['authorize:ADM,MNG'])->group(function () {
+    Route::middleware(['authorize:ADM,MNG'])->group(function(){
         Route::group(['prefix' => 'barang'], function () {
             Route::get('/create', [BarangController::class, 'create']); // Form tambah barang
             Route::post('/', [BarangController::class, 'store']); // Simpan barang baru
@@ -119,35 +122,27 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::group(['prefix' => 'supplier'], function () {
-        Route::get('/', [SupplierController::class, 'index']);
-        Route::post('/list', [SupplierController::class, 'list']);
-        Route::get('/create', [SupplierController::class, 'create']);
-        Route::post('/', [SupplierController::class, 'store']);
-        // Create menggunakan AJAX
-        Route::get('/create_ajax', [SupplierController::class, 'create_ajax']); // menampilkan halaman form tambah Supplier ajax
-        Route::post('/ajax', [SupplierController::class, 'store_ajax']); // menyimpan data Supplier baru ajax
-        Route::get('/{id}', [SupplierController::class, 'show']);
-        Route::get('/{id}/edit', [SupplierController::class, 'edit']);
-        Route::put('/{id}', [SupplierController::class, 'update']);
-        // Edit menggunakan AJAX
-        Route::get('/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']); // menampilkan halaman form edit Supplier ajax
-        Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']); // menyimpan perubahan data Supplier ajax
-        // Delete menggunakan AJAX
-        Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']); //menampilkan form confirm delete Supplier ajax
-        Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']); // menghapus data Supplier ajax
-        Route::delete('/{id}', [SupplierController::class, 'destroy']);
-    });
     
-    // // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager)
-    // Route::middleware(['authorize:ADM,MNG'])->group(function(){
-    //     Route::get('/barang', [BarangController::class, 'index']);
-    //     Route::post('/barang/list', [BarangController::class, 'list']);
-    //     Route::get('/barang/create_ajax', [BarangController::class, 'create_ajax']); // ajax form create
-    //     Route::post('/barang_ajax', [BarangController::class, 'store_ajax']); // ajax store
-    //     Route::get('/barang/{id}/edit_ajax', [BarangController::class, 'edit_ajax']); // ajax form edit
-    //     Route::put('/barang/{id}/update_ajax', [BarangController::class, 'update_ajax']); // ajax update
-    //     Route::get('/barang/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']); // ajax form confirm
-    //     Route::delete('/barang/{id}/delete_ajax', [BarangController::class, 'delete_ajax']); // ajax delete
-    // });
+    // artinya semua route di dalam group ini harus punya role ADM (Administrator) dan MNG (Manager)
+    Route::middleware(['authorize:ADM,MNG'])->group(function(){
+        Route::group(['prefix' => 'supplier'], function () {
+            Route::get('/', [SupplierController::class, 'index']);
+            Route::post('/list', [SupplierController::class, 'list']);
+            Route::get('/create', [SupplierController::class, 'create']);
+            Route::post('/', [SupplierController::class, 'store']);
+            // Create menggunakan AJAX
+            Route::get('/create_ajax', [SupplierController::class, 'create_ajax']); // menampilkan halaman form tambah Supplier ajax
+            Route::post('/ajax', [SupplierController::class, 'store_ajax']); // menyimpan data Supplier baru ajax
+            Route::get('/{id}', [SupplierController::class, 'show']);
+            Route::get('/{id}/edit', [SupplierController::class, 'edit']);
+            Route::put('/{id}', [SupplierController::class, 'update']);
+             // Edit menggunakan AJAX
+             Route::get('/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']); // menampilkan halaman form edit Supplier ajax
+             Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']); // menyimpan perubahan data Supplier ajax
+             // Delete menggunakan AJAX
+             Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']); //menampilkan form confirm delete Supplier ajax
+             Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']); // menghapus data Supplier ajax
+            Route::delete('/{id}', [SupplierController::class, 'destroy']);
+        });
+    });
 });
