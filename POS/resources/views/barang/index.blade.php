@@ -7,6 +7,7 @@
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+            <button onclick="modalAction('{{ url('barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
 
@@ -49,6 +50,9 @@
         </table>
     </div>
 </div>
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" 
+    data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true">
+</div>
 @endsection
 
 @push('css')
@@ -56,6 +60,11 @@
 
 @push('js')
 <script>
+    function modalAction(url = ''){
+            $('#myModal').load(url,function(){
+                $('#myModal').modal('show');
+            });
+        }
     $(document).ready(function() {
         var dataBarang = $('#table_barang').DataTable({
             serverSide: true,
@@ -89,18 +98,13 @@
                 {
                     data: "harga_beli",
                     className: "",
-                    orderable: true,
-                    searchable: true
+                    orderable: true, // orderable: true, jika ingin kolom ini bisa diurutkan
+                    searchable: true // searchable: true, jika ingin kolom ini bisa dicari
                 },
                 {
                     data: "harga_jual",
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: "kategori.kategori_nama",
-                    orderable: true,
-                    searchable: true
+                    orderable: true, // orderable: true, jika ingin kolom ini bisa diurutkan
+                    searchable: true // searchable: true, jika ingin kolom ini bisa dicari
                 },
                 {
                     data: "aksi",
@@ -108,10 +112,11 @@
                     searchable: false
                 }
             ]
+          });
+
+            $('#kategori_id').on('change', function() {
+                dataBarang.ajax.reload();
+            });
         });
-        $('#kategori_id').on('change', function() {
-            dataBarang.ajax.reload();
-        });
-    });
-</script>
+    </script>
 @endpush
