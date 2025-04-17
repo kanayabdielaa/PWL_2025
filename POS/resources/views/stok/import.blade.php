@@ -1,25 +1,25 @@
-<form action="{{ url('/supplier/import_ajax') }}" method="POST" id="form-import" enctype="multipart/form-data">
+<form action="{{ url('/stok/import_ajax') }}" method="POST" id="form-import-stok" enctype="multipart/form-data">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Import Data Supplier</h5>
+                <h5 class="modal-title">Import Data Stok</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                    <span aria-hidden="true"></span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label>Download Template</label>
-                    <a href="{{ asset('template_supplier.xlsx') }}" class="btn btn-info btn-sm" download>
+                    <a href="{{ asset('template_stok.xlsx') }}" class="btn btn-info btn-sm" download>
                         <i class="fa fa-file-excel"></i> Download
                     </a>
-                    <small id="error-template" class="error-text form-text text-danger"></small>
+                    <small id="error-kategori_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Pilih File</label>
-                    <input type="file" name="file_supplier" id="file_supplier" class="form-control" required>
-                    <small id="error-file_supplier" class="error-text form-text text-danger"></small>
+                    <input type="file" name="file_stok" id="file_stok" class="form-control" required>
+                    <small id="error-file_stok" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -32,16 +32,16 @@
 
 <script>
     $(document).ready(function() {
-        $("#form-import").validate({
+        $("#form-import-stok").validate({
             rules: {
-                file_supplier: {
+                file_stok: {
                     required: true,
-                    extension: "xlsx|xls"
+                    extension: "xlsx"
                 },
             },
             submitHandler: function(form) {
                 var formData = new FormData(form);
-
+                
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -49,18 +49,18 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        if (response.status) {
-                            $('#modal-master').modal('hide');
+                        if(response.status) {
+                            $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            window.dataSupplier.ajax.reload(); // Reload the DataTable
+                            dataStok.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {
-                                $('#error-' + prefix).text(val[0]);
+                                $('#error-'+prefix).text(val[0]);
                             });
                             Swal.fire({
                                 icon: 'error',
@@ -68,16 +68,6 @@
                                 text: response.message
                             });
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('AJAX Error:', xhr.responseText);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Kesalahan Server',
-                            text: 'Terjadi kesalahan saat mengunggah file: ' + (
-                                xhr.responseJSON?.message ||
-                                'Silakan coba lagi.')
-                        });
                     }
                 });
                 return false;
